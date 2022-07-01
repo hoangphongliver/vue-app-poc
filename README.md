@@ -14,3 +14,5 @@ yarn dev
 
 # Build dist
 yarn build
+
+# Reload web if you can not get data 
