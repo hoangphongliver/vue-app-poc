@@ -173,8 +173,8 @@ const getEventsList = async (payload) => {
   try {
     const data = await gapi.client.calendar.events.list({
       calendarId: calendarId.value,
-      timeMin: dayjs(date.value).format("YYYY-MM-DD") + "T00:00:00.344Z",
-      timeMax: dayjs(date.value).format("YYYY-MM-DD") + "T23:59:59.344Z",
+      timeMin: dayjs(date.value).startOf("day").format(),
+      timeMax: dayjs(date.value).endOf("day").format(),
       maxResults: 20,
     });
     if (!data.result.error) {
