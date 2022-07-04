@@ -178,7 +178,7 @@ const getEventsList = async (payload) => {
       maxResults: 20,
     });
     if (!data.result.error) {
-      events.value = data.result.items;
+      events.value = data.result.items.filter((i) => i.status !== "cancelled");
       loading.value = false;
       return;
     }
