@@ -8,13 +8,16 @@
           for="mostPopular"
           class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400"
         >
-          Playlists Id
+          My Rating
         </label>
-        <input
-          v-model="form.playlistId"
+        <select
+          v-model="form.myRating"
           id="Id"
           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-        />
+        >
+          <option value="like">Like</option>
+          <option value="dislike">Dislike</option>
+        </select>
       </div>
 
       <div class="mb-3">
@@ -47,17 +50,10 @@
 
       <div class="grid grid-cols-2 gap-4 mt-10">
         <button
-          @click="reset"
-          class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
-        >
-          Reset
-        </button>
-
-        <button
           @click="submit"
           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         >
-          Button
+          Submit
         </button>
       </div>
 
@@ -86,8 +82,7 @@ const props = defineProps({
 });
 
 const defaultValue = {
-  playlistId: props.playListId,
-  id: "",
+  myRating: "like",
   maxResults: 20,
 };
 

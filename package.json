@@ -10,11 +10,13 @@
   },
   "dependencies": {
     "dayjs": "^1.11.3",
+    "pinia": "^2.0.14",
     "sass": "^1.53.0",
     "tailwind-config-viewer": "^1.7.1",
     "v-calendar": "^3.0.0-alpha.8",
     "vue": "^3.2.25",
     "vue-router": "4",
+    "vue3-cookies": "^1.0.6",
     "youtube-vue3": "^0.1.15"
   },
   "devDependencies": {

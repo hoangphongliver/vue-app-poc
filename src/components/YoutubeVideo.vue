@@ -1,10 +1,4 @@
 <template>
-  <button
-    @click="reset"
-    class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border mb-4 border-blue-500 hover:border-transparent rounded"
-  >
-    <router-link to="/">Back to Home</router-link>
-  </button>
   <div class="flex">
     <YoutubeFilter
       class="w-2/12"
@@ -30,17 +24,18 @@ import YoutubeFilter from "./YoutubeFilter.vue";
 import IFrameLazyLoadVue from "./IframeLoading.vue";
 import { YoutubeVue3 } from "youtube-vue3";
 import { onMounted, ref } from "vue";
+import useStore from "../store";
 
 const videos = ref([]);
 const errorsList = ref([]);
 const loading = ref(false);
 const playListId = ref("PL_-VfJajZj0U9nEXa4qyfB4U5ZIYCMPlz");
+const { saveUser } = useStore();
 
 const defaultValue = {
   part: ["id", "snippet", "contentDetails", "status"],
-  playlistId: playListId.value,
-  id: "",
-  maxResults: 10,
+  myRating: "like",
+  maxResults: 20,
 };
 
 const authenticate = () => {
@@ -50,7 +45,10 @@ const authenticate = () => {
       scope: "https://www.googleapis.com/auth/youtube.readonly",
     })
     .then(
-      function () {
+      function (e) {
+        loadClient();
+        const userName = e.getBasicProfile().getName();
+        saveUser(userName);
         console.log("Sign-in successful");
       },
       function (err) {
@@ -60,6 +58,7 @@ const authenticate = () => {
 };
 
 const loadClient = async () => {
+  loading.value = true;
   await gapi.client.setApiKey("AIzaSyApgTHh4YvaItbXw42i_ggLM1CGpHgB0dQ");
   await gapi.client.load("https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest");
 
@@ -74,7 +73,7 @@ const loadClient = async () => {
 const getVideosList = async (payload) => {
   try {
     loading.value = true;
-    const data = await gapi.client.youtube.playlistItems.list(payload);
+    const data = await gapi.client.youtube.videos.list(payload);
 
     if (!data.result.error) {
       videos.value = data.result.items;
@@ -100,14 +99,26 @@ const submit = (value) => {
   getVideosList(value);
 };
 
-onMounted(() => {
-  gapi.load("client:auth2", function () {
+onMounted(async () => {
+  gapi.load("client:auth2", async function () {
     gapi.auth2.init({
       client_id:
         "700083678766-7v0ddu3ik1supaucr6jmt5oir9gf0q6n.apps.googleusercontent.com",
+      scope: "email profile openid",
+      plugin_name: "App Name that you used in google developer console API",
     });
 
-    authenticate().then(loadClient);
+    loading.value = true;
+    const authInstance = await gapi.auth2.getAuthInstance();
+
+    if (!authInstance.isSignedIn.get()) {
+      loading.value = false;
+      authenticate();
+    } else {
+      const userName = await authInstance.currentUser.get().getBasicProfile().getName();
+      saveUser(userName);
+      loadClient();
+    }
   });
 });
 </script>
