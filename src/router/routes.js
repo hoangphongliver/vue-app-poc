@@ -3,8 +3,22 @@ export const routes = [
     name: "Home",
     path: "/",
     component: () =>
+      import(/* webpackChunkName: "Register" */ "../components/Home.vue"),
+  },
+  {
+    name: "Subscription",
+    path: "/subscription",
+    component: () =>
       import(
-        /* webpackChunkName: "Register" */ "../components/Home.vue"
+        /* webpackChunkName: "Register" */ "../components/YoutubeSubcription.vue"
+      ),
+  },
+  {
+    name: "Subcription",
+    path: "/subscription/videos/:channelId",
+    component: () =>
+      import(
+        /* webpackChunkName: "Register" */ "../components/SubscriptionVideos.vue"
       ),
   },
   {

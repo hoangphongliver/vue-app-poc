@@ -170,6 +170,7 @@ const loadClient = async () => {
 };
 
 const getEventsList = async (payload) => {
+  loading.value = true;
   try {
     const data = await gapi.client.calendar.events.list({
       calendarId: calendarId.value,
