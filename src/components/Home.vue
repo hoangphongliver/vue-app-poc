@@ -1,6 +1,6 @@
 <template>
   <router-link to="/subscription" class="p-6 bg-blue-600 text-white rounded-xl mx-5">
-    Subcrition Youtube API
+    Subscriptions Youtube API
   </router-link>
   <router-link to="/youtube" class="p-6 bg-red-600 text-white rounded-xl mx-5">
     Youtube Favorites Videos
