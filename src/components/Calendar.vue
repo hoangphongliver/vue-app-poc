@@ -33,39 +33,46 @@
 
       <div class="w-8/12 text-left" v-if="events.length && !loading">
         <div v-for="event in events" :key="event.id">
-          <div
-            v-if="event.creator?.displayName"
-            class="py-4 px-6 border border-gray-300 rounded-md mb-10"
-          >
+          <div class="py-4 px-6 border border-gray-300 rounded-md mb-10">
             <div class="my-2">
               <span class="font-bold">Creator Name</span>:
-              {{ event.creator?.displayName }}
+              {{ event.creator?.displayName || "-" }}
             </div>
             <div class="my-2">
-              <span class="font-bold">Creator Email</span>: {{ event.creator?.email }}
+              <span class="font-bold">Creator Email</span>:
+              {{ event.creator?.email || "-" }}
             </div>
             <div class="my-2">
               <span class="font-bold">Start at</span>:
               <span class="text-red-600">
-                {{ dayjs(event.start?.dateTime).format("DD MMM, YYYY HH:mm") }}
+                {{
+                  dayjs(event.start?.dateTime).format("DD MMM, YYYY HH:mm") ||
+                  "-"
+                }}
               </span>
             </div>
             <div class="my-2">
               <span class="font-bold">End at</span>:
               <span class="text-red-600">
-                {{ dayjs(event.end?.dateTime).format("DD MMM, YYYY HH:mm") }}
+                {{
+                  dayjs(event.end?.dateTime).format("DD MMM, YYYY HH:mm") || "-"
+                }}
               </span>
             </div>
             <div class="my-2">
-              <span class="font-bold">Location</span>: {{ event?.location || "-" }}
+              <span class="font-bold">Location</span>:
+              {{ event?.location || "-" }}
             </div>
             <div class="my-2 break-all">
-              <span class="font-bold">Description</span>: {{ event?.description || "-" }}
+              <span class="font-bold">Description</span>:
+              {{ event?.description || "-" }}
             </div>
             <div>
               <a :href="event.htmlLink" class="break-all">
                 <span class="font-bold">Event link:</span>
-                <span class="text-indigo-500">{{ event?.htmlLink }} </span>
+                <span class="text-indigo-500"
+                  >{{ event?.htmlLink || "-" }}
+                </span>
               </a>
             </div>
 
@@ -89,7 +96,10 @@
       >
         No event
       </div>
-      <div class="text-center flex items-center justify-center w-full" v-if="loading">
+      <div
+        class="text-center flex items-center justify-center w-full"
+        v-if="loading"
+      >
         <button type="button" disabled class="mr-5">
           <svg
             role="status"
@@ -197,7 +207,8 @@ const submit = (value) => {
 
 gapi.load("client:auth2", async function () {
   gapi.auth2.init({
-    client_id: "700083678766-7v0ddu3ik1supaucr6jmt5oir9gf0q6n.apps.googleusercontent.com",
+    client_id:
+      "700083678766-7v0ddu3ik1supaucr6jmt5oir9gf0q6n.apps.googleusercontent.com",
     scope: "email profile openid",
     plugin_name: "App Name that you used in google developer console API",
   });
@@ -209,8 +220,14 @@ gapi.load("client:auth2", async function () {
     loading.value = false;
     authenticate();
   } else {
-    const email = await authInstance.currentUser.get().getBasicProfile().getEmail();
-    const userName = await authInstance.currentUser.get().getBasicProfile().getName();
+    const email = await authInstance.currentUser
+      .get()
+      .getBasicProfile()
+      .getEmail();
+    const userName = await authInstance.currentUser
+      .get()
+      .getBasicProfile()
+      .getName();
     saveUser(userName);
     calendarId.value = email;
     loadClient();

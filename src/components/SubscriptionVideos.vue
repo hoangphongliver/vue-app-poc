@@ -1,7 +1,44 @@
 <template>
   <div class="container mx-auto">
+    <div class="border border-gray-300 rounded-full bg-white flex mb-4 w-11/12">
+      <input
+        v-model="searchTerm"
+        type="text"
+        placeholder="Search...."
+        class="w-full rounded-tl-full rounded-bl-full py-2 px-4"
+      />
+      <button
+        class="bg-red-600 text-white rounded-tr-full rounded-br-full hover:bg-red-300 py-2 px-4"
+        @click="onSearch"
+      >
+        <p class="font-semibold text-base uppercase">Search</p>
+      </button>
+    </div>
+
+    <!-- BUY ME A PIZZA AND HELP SUPPORT OPEN-SOURCE RESOURCES -->
+    <div
+      class="flex items-end justify-end fixed bottom-0 right-0 mb-4 mr-4 z-10"
+    >
+      <div>
+        <a
+          title="Buy me a pizza"
+          href="https://www.buymeacoffee.com/Dekartmc"
+          target="_blank"
+          class="block w-16 h-16 rounded-full transition-all shadow hover:shadow-lg transform hover:scale-110 hover:rotate-12"
+        >
+          <img
+            class="object-cover object-center w-full h-full rounded-full"
+            src="https://img.icons8.com/emoji/48/000000/pizza-emoji.png"
+          />
+        </a>
+      </div>
+    </div>
     <div class="grid grid-cols-4 gap-8 pr-20" v-if="videos.length">
-      <div v-for="video in videos" :key="video.id" :class="{ hidden: !video.id.videoId }">
+      <div
+        v-for="video in videos"
+        :key="video.id"
+        :class="{ hidden: !video.id.videoId }"
+      >
         <IFrameLazyLoadVue
           :src="`https://www.youtube.com/embed/watch?v=x0fSBAgBrOQ&list=${video.id.videoId}`"
           :id="video.id.videoId"
@@ -26,11 +63,13 @@ const loading = ref(false);
 const playListId = ref("PL_-VfJajZj0U9nEXa4qyfB4U5ZIYCMPlz");
 const { saveUser } = useStore();
 const route = useRoute();
+const searchTerm = ref("");
 
 const defaultValue = {
   part: ["id"],
   channelId: route.params.channelId,
   maxResults: 20,
+  type: 'video'
 };
 
 const authenticate = () => {
@@ -55,7 +94,9 @@ const authenticate = () => {
 const loadClient = async () => {
   loading.value = true;
   await gapi.client.setApiKey("AIzaSyApgTHh4YvaItbXw42i_ggLM1CGpHgB0dQ");
-  await gapi.client.load("https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest");
+  await gapi.client.load(
+    "https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest"
+  );
 
   Object.keys(defaultValue).forEach((key) => {
     if (!defaultValue[key]) {
@@ -94,6 +135,15 @@ const submit = (value) => {
   getVideosList(value);
 };
 
+const onSearch = () => {
+  const value = {
+    ...defaultValue,
+    q: searchTerm.value,
+  };
+
+  submit(value);
+};
+
 onMounted(async () => {
   gapi.load("client:auth2", async function () {
     gapi.auth2.init({
@@ -110,7 +160,10 @@ onMounted(async () => {
       loading.value = false;
       authenticate();
     } else {
-      const userName = await authInstance.currentUser.get().getBasicProfile().getName();
+      const userName = await authInstance.currentUser
+        .get()
+        .getBasicProfile()
+        .getName();
       saveUser(userName);
       loadClient();
     }
