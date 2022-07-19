@@ -58,9 +58,12 @@
       </div>
 
       <div v-if="errorsList.length" class="mt-10">
-        <p v-for="(error, index) in errorsList" :key="index" class="text-red-600 text-sm">
-          {{ error.message }}
-        </p>
+        <p
+          v-for="(error, index) in errorsList"
+          :key="index"
+          class="text-red-600 text-sm"
+          v-html="error.message"
+        ></p>
       </div>
     </div>
   </div>
@@ -98,4 +101,8 @@ const submit = () => {
 };
 </script>
 
-<style></style>
+<style>
+code {
+  color: green;
+}
+</style>

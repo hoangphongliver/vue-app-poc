@@ -66,10 +66,10 @@ const route = useRoute();
 const searchTerm = ref("");
 
 const defaultValue = {
-  part: ["id"],
+  part: ["id", "snippet"],
   channelId: route.params.channelId,
   maxResults: 20,
-  type: 'video'
+  type: "video",
 };
 
 const authenticate = () => {

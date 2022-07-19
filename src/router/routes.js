@@ -30,6 +30,14 @@ export const routes = [
       ),
   },
   {
+    name: "YoutubeSearch",
+    path: "/search",
+    component: () =>
+      import(
+        /* webpackChunkName: "Register" */ "../components/YoutubeSearch.vue"
+      ),
+  },
+  {
     name: "Calendar",
     path: "/calendar",
     component: () =>
